@@ -1,0 +1,107 @@
+[package]
+name = "advent-of-code-2023"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "day1"
+path = "src/days/day1.rs"
+
+[[bin]]
+name = "day2"
+path = "src/days/day2.rs"
+
+[[bin]]
+name = "day3"
+path = "src/days/day3.rs"
+
+[[bin]]
+name = "day4"
+path = "src/days/day4.rs"
+
+[[bin]]
+name = "day5"
+path = "src/days/day5.rs"
+
+[[bin]]
+name = "day6"
+path = "src/days/day6.rs"
+
+[[bin]]
+name = "day7"
+path = "src/days/day7.rs"
+
+[[bin]]
+name = "day8"
+path = "src/days/day8.rs"
+
+[[bin]]
+name = "day9"
+path = "src/days/day9.rs"
+
+[[bin]]
+name = "day10"
+path = "src/days/day10.rs"
+
+[[bin]]
+name = "day11"
+path = "src/days/day11.rs"
+
+[[bin]]
+name = "day12"
+path = "src/days/day12.rs"
+
+[[bin]]
+name = "day13"
+path = "src/days/day13.rs"
+
+[[bin]]
+name = "day14"
+path = "src/days/day14.rs"
+
+[[bin]]
+name = "day15"
+path = "src/days/day15.rs"
+
+[[bin]]
+name = "day16"
+path = "src/days/day16.rs"
+
+[[bin]]
+name = "day17"
+path = "src/days/day17.rs"
+
+[[bin]]
+name = "day18"
+path = "src/days/day18.rs"
+
+[[bin]]
+name = "day19"
+path = "src/days/day19.rs"
+
+[[bin]]
+name = "day20"
+path = "src/days/day20.rs"
+
+[[bin]]
+name = "day21"
+path = "src/days/day21.rs"
+
+[[bin]]
+name = "day22"
+path = "src/days/day22.rs"
+
+[[bin]]
+name = "day23"
+path = "src/days/day23.rs"
+
+[[bin]]
+name = "day24"
+path = "src/days/day24.rs"
+
+[[bin]]
+name = "day25"
+path = "src/days/day25.rs"
+
+[dependencies]
+
