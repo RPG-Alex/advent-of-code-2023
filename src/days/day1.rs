@@ -39,9 +39,20 @@ fn main() {
 	let mut content = String::new();
 	file.expect("failed to read file").read_to_string(&mut content);
 
+	let mut total = 0;
 
-	println!("{}", content);
+	for line in content.split_whitespace() {
+		let first_digit = line.chars().filter(|n| n.is_numeric()).next();
+		let last_digit = line.chars().rev().filter(|n| n.is_numeric()).next();
+		let mut combined = String::from(first_digit.unwrap());
+		combined.push(last_digit.unwrap());
+		
+		total += combined.parse::<i32>().unwrap() as i32;
+		
+	}
+	
 	
 	// SO if there is only one digit in the line then need to use that digit twice
+	println!("{}", total);
 
 }
