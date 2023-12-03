@@ -1,4 +1,3 @@
-use core::num;
 /*
 
 --- Day 1: Trebuchet?! ---
@@ -55,7 +54,7 @@ use std::io::Read;
 
 fn main() {
 	//get input from file
-	let file = File::open("day1_input.txt");
+	let file = File::open("inputs/day1.txt");
 
 	// Stringify input
 	let mut content = String::new();
