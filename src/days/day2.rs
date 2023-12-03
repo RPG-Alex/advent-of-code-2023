@@ -83,5 +83,58 @@ fn main() {
             possible_games += game_count;
         }
     }
-    println!("Games ran: {possible_games}");
+    println!("Solution 1: {possible_games}");
+
+    // Solution 2:
+        //get input from file
+	let file = File::open("inputs/day2.txt");
+
+	// Stringify input
+	let mut content = String::new();
+	let _ = file.expect("failed to read file").read_to_string(&mut content);
+
+    // Test case:
+    //content = String::from("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\nGame 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\nGame 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\nGame 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\nGame 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green");
+
+
+    let mut total = 0;
+    let mut game_count = 0;
+
+    for mut line in content.split('\n') {
+        game_count += 1;
+
+        // Keep count of each cube:
+        let mut red = 0;
+        let mut green = 0;
+        let mut blue = 0;
+
+        // strip the game number from our info
+        let game:String = format!("Game {}: ", game_count);
+        line = line.strip_prefix(game.as_str()).expect(game_count.to_string().as_str());
+        
+        for pull in line.to_string().split(';'){
+            for cube in pull.to_string().split(',') {
+                if cube.contains("red") {
+                    let cube = cube.strip_suffix(" red").expect("Failed to strip");
+                    if cube.trim().parse::<i32>().unwrap() > red {
+                        red = cube.trim().parse::<i32>().unwrap();
+                    }
+                } else if cube.contains("blue") {
+                    let cube = cube.strip_suffix(" blue").expect("Failed to strip");
+                    if cube.trim().parse::<i32>().unwrap() > blue {
+                        blue = cube.trim().parse::<i32>().unwrap();
+                    }
+                } else if cube.contains("green") {
+                    let cube = cube.strip_suffix(" green").expect("Failed to strip");
+                    if cube.trim().parse::<i32>().unwrap() > green {
+                        green = cube.trim().parse::<i32>().unwrap();
+                    }
+                }
+            }
+        }
+        let power = red*blue*green;
+        total += power;
+    }
+    println!("Solution 2: {}", total);
+
 }
