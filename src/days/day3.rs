@@ -45,20 +45,18 @@ fn main() {
     // Test case:
     content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
 
+    // Put lines into vector
     let lines: Vec<&str> = content.lines().collect();
-    
-    let mut i = 0;
-    for line in lines.iter() {
-        let mut possible = String::new();
-        
-        for c in line.chars() {
-            if c.is_numeric() {
-                possible.push(c);
-            } 
+
+    //Iterate the vector using line counts
+    for (i, line) in lines.iter().enumerate() {
+        if i > 0 && i < lines.len() {
+            println!("{}", lines[i-1]);
+        } else if i == 0 {
+
+        } else {
+
         }
-
-        println!("{:#?}",possible);
-
     }
     
 }
