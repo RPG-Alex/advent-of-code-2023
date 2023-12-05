@@ -48,15 +48,64 @@ fn main() {
     // Put lines into vector
     let lines: Vec<&str> = content.lines().collect();
 
+    let characters = [
+        '*',
+        '#',
+        '+',
+        '$',
+        '&',
+        '=',
+        '/',
+        '%',
+        '@',
+        '!',
+        '^',
+        '(',
+        ')',
+        '-',
+    ];
+
+    // Create a counter to track the total
+    let mut total = 0;
+
     //Iterate the vector using line counts
     for (i, line) in lines.iter().enumerate() {
-        if i > 0 && i < lines.len() {
-            println!("{}", lines[i-1]);
-        } else if i == 0 {
-
-        } else {
-
+        // set default value for edge cases
+        let mut top = "..........";
+        let mut bottom = "..........";
+        
+        // If top or bottom exist, swap for actual lines
+        if i > 0 {
+            top = lines.get(i-1).expect("Unable to locate previous line");
         }
+        if i < lines.len()-1 {
+            bottom = lines.get(i+1).expect("Unable to get next line");
+        }
+        let mut sub_total = String::new();
+        for (j, c) in line.chars().enumerate() {
+        
+        if c.is_numeric() {
+            if characters.iter().any(|&symbol| {
+                let neighbors = [
+                    top.chars().nth(j).unwrap(),
+                    top.chars().nth(j+1).unwrap_or(' '),
+                    top.chars().nth(j+2).unwrap_or(' '),
+                    line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
+                    line.chars().nth(j+1).unwrap_or(' '),
+                    bottom.chars().nth(j).unwrap(),
+                    line.chars().nth(j+1).unwrap_or(' '),
+                    line.chars().nth(j+1).unwrap_or(' '),
+                ];
+                neighbors.contains(&symbol)
+            }) {
+                
+                sub_total.push(c);
+                print!("{}\n",sub_total);
+            } else {
+                sub_total.clear();
+            }
+        }
+       }
+
     }
-    
 }
