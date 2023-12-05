@@ -81,20 +81,31 @@ fn main() {
         if i < lines.len()-1 {
             bottom = lines.get(i+1).expect("Unable to get next line");
         }
-        let mut sub_total = String::new();
-        for (j, c) in line.chars().enumerate() {
         
+        let mut sub_total = 0;
+        let mut num = String::new();
+        for (j, c) in line.chars().enumerate() {
         if c.is_numeric() {
-            if characters.iter().any(|&symbol| {
+            num.push(c);
+            if characters.iter().any(|&symbol|  {
                 let neighbors = [
+                    
                     top.chars().nth(j).unwrap(),
+                    if j > 0 {
+                        top.chars().nth(j-1).unwrap_or(' ')
+                    } else {
+                        ' '
+                    },
                     top.chars().nth(j+1).unwrap_or(' '),
-                    top.chars().nth(j+2).unwrap_or(' '),
                     line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
                     line.chars().nth(j+1).unwrap_or(' '),
                     bottom.chars().nth(j).unwrap(),
-                    line.chars().nth(j+1).unwrap_or(' '),
-                    line.chars().nth(j+1).unwrap_or(' '),
+                    if j > 0 {
+                        bottom.chars().nth(j-1).unwrap_or(' ')
+                    } else {
+                        ' '
+                    },
+                    bottom.chars().nth(j+1).unwrap_or(' '),
                 ];
                 neighbors.contains(&symbol)
             }) {
