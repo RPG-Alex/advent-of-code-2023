@@ -33,17 +33,18 @@ Of course, the actual engine schematic is much larger. What is the sum of all of
 */
 use std::fs::File;
 use std::io::Read;
+use std::collections::HashMap;
 
 fn main() {
-        //get input from file
-	let file = File::open("inputs/day3.txt");
+    //get input from file
+    let file = File::open("inputs/day3.txt");
 
-	// Stringify input
-	let mut content = String::new();
-	let _ = file.expect("failed to read file").read_to_string(&mut content);
+    // Stringify input
+    let mut content = String::new();
+    let _ = file.expect("failed to read file").read_to_string(&mut content);
 
     // Test case:
-    content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
+    //content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
 
     // Put lines into vector
     let lines: Vec<&str> = content.lines().collect();
@@ -65,100 +66,66 @@ fn main() {
         '-',
     ];
 
-    // Create a counter to track the total
+    // Running Total
     let mut total = 0;
 
     //Iterate the vector using line counts
     for (i, line) in lines.iter().enumerate() {
         // set default value for edge cases
-        let mut top = "..........";
-        let mut bottom = "..........";
-        
-        // If top or bottom exist, swap for actual lines
-        if i > 0 {
-            top = lines.get(i-1).expect("Unable to locate previous line");
-        }
-        if i < lines.len()-1 {
-            bottom = lines.get(i+1).expect("Unable to get next line");
-        }
-        
-        let mut sub_total = 0;
-        let mut num = String::new();
+        let top: &str = if i > 0 { lines[i - 1] } else { ".........." };
+        let bottom: &str = if i < lines.len() - 1 { lines[i + 1] } else { ".........." };
+
+        let mut num: HashMap<usize, char> = HashMap::new();
         let line_chars: Vec<char> = line.chars().into_iter().collect();
         for (j, c) in line_chars.iter().enumerate() {
             if c.is_numeric() {
-                if characters.iter().any(|&symbol|  {
-                    let neighbors = [
-                        
-                        top.chars().nth(j).unwrap(),
-                        if j > 0 {
-                            top.chars().nth(j-1).unwrap_or(' ')
-                        } else {
-                            ' '
-                        },
-                        top.chars().nth(j+1).unwrap_or(' '),
-                        line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
-                        line.chars().nth(j+1).unwrap_or(' '),
-                        bottom.chars().nth(j).unwrap(),
-                        if j > 0 {
-                            bottom.chars().nth(j-1).unwrap_or(' ')
-                        } else {
-                            ' '
-                        },
-                        bottom.chars().nth(j+1).unwrap_or(' '),
-                    ];
-                    neighbors.contains(&symbol)
-                }) {
-                    num.push(*c);
-                } else if !num.is_empty() {
-                    num.push(*c);
-                } else {
-                    if !num.is_empty() {
-                        sub_total += num.parse::<i32>().unwrap();
-                        //num.clear();    
-                    }
-                    
+                num.insert(j, *c);
+            } else {
+                check_number(&mut num, &characters, &line_chars, top, bottom, &mut total, line);
+            }
+        }
+        // Check the last number in the line
+        check_number(&mut num, &characters, &line_chars, top, bottom, &mut total, line);
+    }
+    println!("{}", total);
+}
+
+
+fn check_number(num: &mut HashMap<usize, char>, characters: &[char], line_chars: &[char], top: &str, bottom: &str, total: &mut i32, line: &&str) {
+    if !num.is_empty() {
+        //Check if our number is valid
+        let mut sorted_keys: Vec<usize> = num.keys().cloned().collect();
+        sorted_keys.sort();
+        let mut valid = false;
+
+        // Check for symbols in the lines above or below that are touching any of the digits
+        for &key in sorted_keys.iter() {
+            if top.len() >= key && bottom.len() >= key {
+                if (key > 0 && characters.contains(&line_chars[key - 1]))
+                    || characters.contains(&line_chars[key])
+                    || (key < line.len() - 1 && characters.contains(&line_chars[key + 1]))
+                    || characters.contains(&top.chars().nth(key).unwrap_or_default())
+                    || (key > 0 && characters.contains(&top.chars().nth(key - 1).unwrap_or_default()))
+                    || (key < top.len() - 1 && characters.contains(&top.chars().nth(key + 1).unwrap_or_default()))
+                    || characters.contains(&bottom.chars().nth(key).unwrap_or_default())
+                    || (key > 0 && characters.contains(&bottom.chars().nth(key - 1).unwrap_or_default()))
+                    || (key < bottom.len() - 1 && characters.contains(&bottom.chars().nth(key + 1).unwrap_or_default())) {
+                    valid = true;
+                    break;
                 }
             }
         }
-        
-        println!("{:#?}", num);
 
-        //println!("{:#?}", line_chars);
-    //     for (j, c) in line_chars {
-    //     if c.is_numeric() {
-    //         num.push(c);
-    //         if characters.iter().any(|&symbol|  {
-    //             let neighbors = [
-                    
-    //                 top.chars().nth(j).unwrap(),
-    //                 if j > 0 {
-    //                     top.chars().nth(j-1).unwrap_or(' ')
-    //                 } else {
-    //                     ' '
-    //                 },
-    //                 top.chars().nth(j+1).unwrap_or(' '),
-    //                 line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
-    //                 line.chars().nth(j+1).unwrap_or(' '),
-    //                 bottom.chars().nth(j).unwrap(),
-    //                 if j > 0 {
-    //                     bottom.chars().nth(j-1).unwrap_or(' ')
-    //                 } else {
-    //                     ' '
-    //                 },
-    //                 bottom.chars().nth(j+1).unwrap_or(' '),
-    //             ];
-    //             neighbors.contains(&symbol)
-    //         }) {
-                
-    //             num.push(c);
-                
-    //             print!("{}\n",sub_total);
-    //         } else {
-    //             num.clear();
-    //         }
-    //     }
-    //    }
-
+        if valid {
+            // Combine values based on sorted keys
+            let combined_string: String = sorted_keys
+                .iter()
+                .map(|&key| num.get(&key).unwrap())
+                .collect();
+            let as_int: i32 = combined_string.parse().unwrap();
+            *total += as_int;
+        }
+        num.clear();
     }
 }
+// wrong: 548638, 546996
