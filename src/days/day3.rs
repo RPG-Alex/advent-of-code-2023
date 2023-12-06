@@ -31,17 +31,14 @@ In this schematic, two numbers are not part numbers because they are not adjacen
 Of course, the actual engine schematic is much larger. What is the sum of all of the part numbers in the engine schematic?
 
 */
-use std::fs::File;
-use std::io::Read;
+
+use std::fs::read_to_string;
 use std::collections::HashMap;
 
 fn main() {
     //get input from file
-    let file = File::open("inputs/day3.txt");
-
     // Stringify input
-    let mut content = String::new();
-    let _ = file.expect("failed to read file").read_to_string(&mut content);
+    let mut content = read_to_string("inputs/day3.txt").unwrap();
 
     // Test case:
     //content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
@@ -49,22 +46,13 @@ fn main() {
     // Put lines into vector
     let lines: Vec<&str> = content.lines().collect();
 
-    let characters = [
-        '*',
-        '#',
-        '+',
-        '$',
-        '&',
-        '=',
-        '/',
-        '%',
-        '@',
-        '!',
-        '^',
-        '(',
-        ')',
-        '-',
-    ];
+    //get all non period non number characters from file
+    let mut characters = Vec::new();
+    for ch in content.chars() {
+        if !ch.is_digit(10) && ch != '.' && !characters.contains(&ch) {
+            characters.push(ch);
+        }
+    }
 
     // Running Total
     let mut total = 0;
@@ -84,8 +72,7 @@ fn main() {
                 check_number(&mut num, &characters, &line_chars, top, bottom, &mut total, line);
             }
         }
-        // Check the last number in the line
-        check_number(&mut num, &characters, &line_chars, top, bottom, &mut total, line);
+
     }
     println!("{}", total);
 }
@@ -129,3 +116,5 @@ fn check_number(num: &mut HashMap<usize, char>, characters: &[char], line_chars:
     }
 }
 // wrong: 548638, 546996
+
+// Right: 550934
