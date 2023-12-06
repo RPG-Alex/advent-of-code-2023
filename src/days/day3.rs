@@ -84,39 +84,81 @@ fn main() {
         
         let mut sub_total = 0;
         let mut num = String::new();
-        for (j, c) in line.chars().enumerate() {
-        if c.is_numeric() {
-            num.push(c);
-            if characters.iter().any(|&symbol|  {
-                let neighbors = [
+        let line_chars: Vec<char> = line.chars().into_iter().collect();
+        for (j, c) in line_chars.iter().enumerate() {
+            if c.is_numeric() {
+                if characters.iter().any(|&symbol|  {
+                    let neighbors = [
+                        
+                        top.chars().nth(j).unwrap(),
+                        if j > 0 {
+                            top.chars().nth(j-1).unwrap_or(' ')
+                        } else {
+                            ' '
+                        },
+                        top.chars().nth(j+1).unwrap_or(' '),
+                        line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
+                        line.chars().nth(j+1).unwrap_or(' '),
+                        bottom.chars().nth(j).unwrap(),
+                        if j > 0 {
+                            bottom.chars().nth(j-1).unwrap_or(' ')
+                        } else {
+                            ' '
+                        },
+                        bottom.chars().nth(j+1).unwrap_or(' '),
+                    ];
+                    neighbors.contains(&symbol)
+                }) {
+                    num.push(*c);
+                } else if !num.is_empty() {
+                    num.push(*c);
+                } else {
+                    if !num.is_empty() {
+                        sub_total += num.parse::<i32>().unwrap();
+                        //num.clear();    
+                    }
                     
-                    top.chars().nth(j).unwrap(),
-                    if j > 0 {
-                        top.chars().nth(j-1).unwrap_or(' ')
-                    } else {
-                        ' '
-                    },
-                    top.chars().nth(j+1).unwrap_or(' '),
-                    line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
-                    line.chars().nth(j+1).unwrap_or(' '),
-                    bottom.chars().nth(j).unwrap(),
-                    if j > 0 {
-                        bottom.chars().nth(j-1).unwrap_or(' ')
-                    } else {
-                        ' '
-                    },
-                    bottom.chars().nth(j+1).unwrap_or(' '),
-                ];
-                neighbors.contains(&symbol)
-            }) {
-                
-                sub_total.push(c);
-                print!("{}\n",sub_total);
-            } else {
-                sub_total.clear();
+                }
             }
         }
-       }
+        
+        println!("{:#?}", num);
+
+        //println!("{:#?}", line_chars);
+    //     for (j, c) in line_chars {
+    //     if c.is_numeric() {
+    //         num.push(c);
+    //         if characters.iter().any(|&symbol|  {
+    //             let neighbors = [
+                    
+    //                 top.chars().nth(j).unwrap(),
+    //                 if j > 0 {
+    //                     top.chars().nth(j-1).unwrap_or(' ')
+    //                 } else {
+    //                     ' '
+    //                 },
+    //                 top.chars().nth(j+1).unwrap_or(' '),
+    //                 line.chars().nth(j.wrapping_sub(1)).unwrap_or(' '),
+    //                 line.chars().nth(j+1).unwrap_or(' '),
+    //                 bottom.chars().nth(j).unwrap(),
+    //                 if j > 0 {
+    //                     bottom.chars().nth(j-1).unwrap_or(' ')
+    //                 } else {
+    //                     ' '
+    //                 },
+    //                 bottom.chars().nth(j+1).unwrap_or(' '),
+    //             ];
+    //             neighbors.contains(&symbol)
+    //         }) {
+                
+    //             num.push(c);
+                
+    //             print!("{}\n",sub_total);
+    //         } else {
+    //             num.clear();
+    //         }
+    //     }
+    //    }
 
     }
 }
