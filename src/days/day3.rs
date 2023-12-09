@@ -156,12 +156,47 @@ fn check_surroundings(start: usize, end: usize, line_length: i32, content: &str)
     false
 }
 
-// logic for this one
+// This function is used for the top and bottom functions to determin if suitable line
+fn gear_is_valid(top_line: &str, location: i32) -> Result<i32, bool> {
+    let mut count = 0; 
+	for (i, char) in top_line.chars().enumerate() {
+        if let Some(digit) = char.to_digit(10) {
+            let position = (i as isize - location as isize ) as i32;
 
-fn top_is_valid(top_line: &str, location: i32) -> Result<i32, bool> {
-	
+            if position >= -2 && position <= 2 {
+                count = count * 10 + digit as i32;
+            }
+        }
+    }
+
+    if count != 0 {
+        Ok(count)
+    } else {
+        Err(false)
+    }
+
 }
 
-fn bottom_is_valid() -> Result<i32, bool> {
-	
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn valid_input() {
+        // Test case with valid numbers around the location
+        let top_line = "ABC123DE";
+        let location = 4;
+
+        assert_eq!(gear_is_valid(top_line, location), Ok(123));
+    }
+
+    #[test]
+    fn invalid_input() {
+        // Test case with no numbers around the location
+        let top_line = "ABCDE";
+        let location = 2;
+
+        assert_eq!(gear_is_valid(top_line, location), Err(false));
+    }
 }
