@@ -122,10 +122,12 @@ fn main() {
     println!("The total of part 1 is: {}", total);
 
 	// Part Two:
+    let content = read_to_string("inputs/day3.txt").unwrap();
     //testing
     let content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
     
-
+    let gears = all_valid_gears_and_sum(content);
+    println!("Gear Total (part 2): {}", gears)
     
 }
 
@@ -160,7 +162,14 @@ fn check_surroundings(start: usize, end: usize, line_length: i32, content: &str)
 
 fn all_valid_gears_and_sum(content: String) -> i32 {
     let mut total = 0;
+    let lines: Vec<&str>= content.lines().collect();    
+    let line_length = lines.get(0).map_or(0, |line: &_| 
+        line.len() as usize);
 
-
+        
+    println!("Going: {}", line_length);
     total
 }
+
+
+// next().expect("No next value found. Make sure you are passing the day3.txt file in the inputs folder.").len();
