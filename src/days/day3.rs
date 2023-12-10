@@ -166,10 +166,31 @@ fn all_valid_gears_and_sum(content: String) -> i32 {
     let line_length = lines.get(0).map_or(0, |line: &_| 
         line.len() as usize);
 
-        
+    let content = content.replace('\n', "");
+    let chars: Vec<char> = content.chars().collect();
+    let mut first_num = 0;
+    let mut second_num = 0; 
+    for (i, c) in chars.iter().enumerate() {
+        if c == &'*' {
+            let indices_to_check = vec![
+                (i - line_length - 1) as usize, // top left
+                (i - line_length) as usize,     // top
+                (i - line_length + 1) as usize, // top right
+                (i - 1) as usize,               // left
+                (i + 1) as usize,               // right
+                (i + line_length - 1) as usize, // bottom left
+                (i + line_length) as usize,     // bottom
+                (i + line_length + 1) as usize, // bottom right
+            ];
+            for check_index in indices_to_check {
+                if chars[check_index].is_numeric() {
+
+                }
+            }
+        }
+    }
+
     println!("Going: {}", line_length);
     total
 }
 
-
-// next().expect("No next value found. Make sure you are passing the day3.txt file in the inputs folder.").len();
