@@ -115,7 +115,6 @@ fn main() {
     let mut total = 0;
     for (s, start, end) in all_possible_numbers {
         if check_surroundings(start, end, line_length, &content) {
-            println!("({}, {}, {})", s, start, end);
             total += s.parse::<i32>().unwrap();
         }
     }
@@ -123,7 +122,10 @@ fn main() {
     println!("The total of part 1 is: {}", total);
 
 	// Part Two:
-	
+    //testing
+    let content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
+    
+
     
 }
 
@@ -156,47 +158,9 @@ fn check_surroundings(start: usize, end: usize, line_length: i32, content: &str)
     false
 }
 
-// This function is used for the top and bottom functions to determin if suitable line
-fn gear_is_valid(top_line: &str, location: i32) -> Result<i32, bool> {
-    let mut count = 0; 
-	for (i, char) in top_line.chars().enumerate() {
-        if let Some(digit) = char.to_digit(10) {
-            let position = (i as isize - location as isize ) as i32;
-
-            if position >= -2 && position <= 2 {
-                count = count * 10 + digit as i32;
-            }
-        }
-    }
-
-    if count != 0 {
-        Ok(count)
-    } else {
-        Err(false)
-    }
-
-}
+fn all_valid_gears_and_sum(content: String) -> i32 {
+    let mut total = 0;
 
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn valid_input() {
-        // Test case with valid numbers around the location
-        let top_line = "ABC123DE";
-        let location = 4;
-
-        assert_eq!(gear_is_valid(top_line, location), Ok(123));
-    }
-
-    #[test]
-    fn invalid_input() {
-        // Test case with no numbers around the location
-        let top_line = "ABCDE";
-        let location = 2;
-
-        assert_eq!(gear_is_valid(top_line, location), Err(false));
-    }
+    total
 }
