@@ -168,24 +168,28 @@ fn all_valid_gears_and_sum(content: String) -> i32 {
 
     let content = content.replace('\n', "");
     let chars: Vec<char> = content.chars().collect();
-    let mut first_num = 0;
-    let mut second_num = 0; 
     for (i, c) in chars.iter().enumerate() {
         if c == &'*' {
-            let indices_to_check = vec![
+            let mut upper: i32;
+            let mut current: i32;
+            let mut lower: i32;
+            let upper_indices_to_check = vec![
                 (i - line_length - 1) as usize, // top left
                 (i - line_length) as usize,     // top
                 (i - line_length + 1) as usize, // top right
+            ];
+            let indices_to_check = vec![
                 (i - 1) as usize,               // left
                 (i + 1) as usize,               // right
+            ];
+            let lower_indices_to_check = vec![
                 (i + line_length - 1) as usize, // bottom left
                 (i + line_length) as usize,     // bottom
                 (i + line_length + 1) as usize, // bottom right
             ];
-            for check_index in indices_to_check {
-                if chars[check_index].is_numeric() {
 
-                }
+            for index in upper_indices_to_check {
+                
             }
         }
     }
