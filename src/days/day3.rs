@@ -188,13 +188,16 @@ fn all_valid_gears_and_sum(content: String) -> i32 {
                 (i + line_length + 1) as usize, // bottom right
             ];
 
-            for index in upper_indices_to_check {
-                
+            for index in upper_indices_to_check.iter() {
+                if chars.get(*index).map_or(false, |&ch| ch.is_digit(10)) {
+                    println!("Found me a number! {}", chars[*index]);
+
+                    //need to now check the left and right of that number for numbers, if found, continue those directions 
+                }
+                //println!("{}", index);
             }
         }
     }
-
-    println!("Going: {}", line_length);
     total
 }
 
