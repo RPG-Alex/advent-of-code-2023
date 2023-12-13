@@ -65,69 +65,69 @@ What is the sum of all of the gear ratios in your engine schematic?
 use std::fs::read_to_string;
 
 fn main() {
-    //get input from file
-    // Stringify input
-    let content = read_to_string("inputs/day3.txt").unwrap();
+    // //get input from file
+    // // Stringify input
+    // let content = read_to_string("inputs/day3.txt").unwrap();
 
-    // Test case:
-    //let content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
+    // // Test case:
+    // //let content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
 
-    // Get the line length for first line
-    let lines: Vec<&str> = content.lines().collect();
-    let line_length = lines.get(0).map_or(0, |line| 
-        line.len()) as i32;
-    // After we have total line length, filter out lines. no longer needed    
-    let content = content.replace('\n', "");
+    // // Get the line length for first line
+    // let lines: Vec<&str> = content.lines().collect();
+    // let line_length = lines.get(0).map_or(0, |line| 
+    //     line.len()) as i32;
+    // // After we have total line length, filter out lines. no longer needed    
+    // let content = content.replace('\n', "");
 
-    // Turn String into a vector of index and char
-    let characters: Vec<_> = content.chars().enumerate().collect();
-    // Take that string and keep only numbers, retaining their location
-    let all_nums_as_chars: Vec<(usize, char)> = characters.clone().into_iter().filter(|&(_,c)|
-        c.is_numeric()
-    ).collect();
+    // // Turn String into a vector of index and char
+    // let characters: Vec<_> = content.chars().enumerate().collect();
+    // // Take that string and keep only numbers, retaining their location
+    // let all_nums_as_chars: Vec<(usize, char)> = characters.clone().into_iter().filter(|&(_,c)|
+    //     c.is_numeric()
+    // ).collect();
 
 
 
-    //Group neighboring numbers and retain their starting and ending locations in the characters vec
-    let mut all_possible_numbers: Vec<(String, usize, usize)> = Vec::new();
+    // //Group neighboring numbers and retain their starting and ending locations in the characters vec
+    // let mut all_possible_numbers: Vec<(String, usize, usize)> = Vec::new();
     
-    // Used for iterating and grouping
-    let mut current = String::new();
-    let mut start_index = 0;
+    // // Used for iterating and grouping
+    // let mut current = String::new();
+    // let mut start_index = 0;
 
-    for (i, (index, c)) in all_nums_as_chars.iter().enumerate() {
-        if i == 0 || *index == all_nums_as_chars[i -1].0 + 1{
-            current.push(*c);
-        } else {
-            all_possible_numbers.push((current.clone(), start_index, all_nums_as_chars[i-1].0));
+    // for (i, (index, c)) in all_nums_as_chars.iter().enumerate() {
+    //     if i == 0 || *index == all_nums_as_chars[i -1].0 + 1{
+    //         current.push(*c);
+    //     } else {
+    //         all_possible_numbers.push((current.clone(), start_index, all_nums_as_chars[i-1].0));
 
-            current = c.to_string();
-            start_index = *index;
-        }
-    }
-    // Push last sequence
-    if !current.is_empty() {
-        all_possible_numbers.push((current, start_index, all_nums_as_chars.last().unwrap().0));
-    }
+    //         current = c.to_string();
+    //         start_index = *index;
+    //     }
+    // }
+    // // Push last sequence
+    // if !current.is_empty() {
+    //     all_possible_numbers.push((current, start_index, all_nums_as_chars.last().unwrap().0));
+    // }
 
 
-    //Check every possible number for validity and add to total if valid
-    let mut total = 0;
-    for (s, start, end) in all_possible_numbers {
-        if check_surroundings(start, end, line_length, &content) {
-            total += s.parse::<i32>().unwrap();
-        }
-    }
+    // //Check every possible number for validity and add to total if valid
+    // let mut total = 0;
+    // for (s, start, end) in all_possible_numbers {
+    //     if check_surroundings(start, end, line_length, &content) {
+    //         total += s.parse::<i32>().unwrap();
+    //     }
+    // }
 
-    println!("The total of part 1 is: {}", total);
+    // println!("The total of part 1 is: {}", total);
 
 	// Part Two:
     let content = read_to_string("inputs/day3.txt").unwrap();
     //testing
     let content = String::from("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..");
     
-    let gears = all_valid_gears_and_sum(content);
-    println!("Gear Total (part 2): {}", gears)
+    let gears = all_valid_gear_ratio_sum(content);
+    //println!("Gear Total (part 2): {}", gears)
     
 }
 
@@ -160,44 +160,93 @@ fn check_surroundings(start: usize, end: usize, line_length: i32, content: &str)
     false
 }
 
-fn all_valid_gears_and_sum(content: String) -> i32 {
+// Should return i32 when completed
+fn all_valid_gear_ratio_sum(content: String) {
+    // Get content into a vec of each line, shoudl eliminate whitespace
+    let lines: Vec<&str> = content.lines().collect();
+
+    // We will use these to track our progress
+    let mut top = String::new();
+    let mut middle = String::new();
+    let mut bottom = String::new();
+
+    //We will need line length
+    let line_length = lines.get(0).unwrap().len();
+
+    // Our running total
     let mut total = 0;
-    let lines: Vec<&str>= content.lines().collect();    
-    let line_length = lines.get(0).map_or(0, |line: &_| 
-        line.len() as usize);
 
-    let content = content.replace('\n', "");
-    let chars: Vec<char> = content.chars().collect();
-    for (i, c) in chars.iter().enumerate() {
-        if c == &'*' {
-            let mut upper: i32;
-            let mut current: i32;
-            let mut lower: i32;
-            let upper_indices_to_check = vec![
-                (i - line_length - 1) as usize, // top left
-                (i - line_length) as usize,     // top
-                (i - line_length + 1) as usize, // top right
-            ];
-            let indices_to_check = vec![
-                (i - 1) as usize,               // left
-                (i + 1) as usize,               // right
-            ];
-            let lower_indices_to_check = vec![
-                (i + line_length - 1) as usize, // bottom left
-                (i + line_length) as usize,     // bottom
-                (i + line_length + 1) as usize, // bottom right
-            ];
+    for (i, line) in lines.iter().enumerate() {
+        if i == 0 {
+            //The first line cannot be empty
+            while top.len() < line_length {
+                top.push('.');
+            }
+        } else {
+            top = lines[i-1].to_string();
+        }
 
-            for index in upper_indices_to_check.iter() {
-                if chars.get(*index).map_or(false, |&ch| ch.is_digit(10)) {
-                    println!("Found me a number! {}", chars[*index]);
+        if i == lines.len()-1 {
+            // We need a last last line when we get to the final line    
+            bottom.clear();
+            while bottom.len() < line_length {
+                bottom.push('.');
+            }
+        } else {
+            bottom = lines[i+1].to_string();
+        }
+        middle = line.to_string();
 
-                    //need to now check the left and right of that number for numbers, if found, continue those directions 
+        for (i, char) in middle.chars().into_iter().enumerate() {
+            if char == '*' {
+                let top_num = valid_number(top.clone(), i, line_length);
+                let line_num = valid_number(middle.clone(), i, line_length);
+                let bottom_num = valid_number(bottom.clone(), i, line_length);
+
+                if (top_num * bottom_num) > 0 {
+                    total += top_num * bottom_num
+                } else if (top_num*line_num) > 0{
+                    total += top_num*line_num;
+                } else if (line_num*bottom_num) > 0{
+                    total += line_num*bottom_num;
                 }
-                //println!("{}", index);
+
             }
         }
+
     }
-    total
+
+    println!("total: {}", total);
+    
+
+
+
+
 }
 
+fn valid_number(line: String, gear: usize, length: usize) -> i32{
+    // Keep count with a string for simplicity
+    let mut number = String::new();
+
+    // get all chars i the line
+    let chars: Vec<char>= line.chars().collect();
+
+    // Safely iterate through the vector of characters (shouldnt panic with min max)
+    let start = std::cmp::max(0, gear as isize - 3) as usize;
+    let end = std::cmp::min(gear + 3, length - 1);
+
+
+    for i in start..=end {
+        if chars[i].is_numeric() {
+            number.push(chars[i]);
+        } else if !chars[i].is_numeric() && !number.is_empty() {
+            break;
+        }
+    }
+
+    if number.is_empty() {
+        number.push('0');
+    }
+
+    number.parse::<i32>().unwrap()
+}
