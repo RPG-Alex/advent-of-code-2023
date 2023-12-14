@@ -199,10 +199,10 @@ fn all_valid_gear_ratio_sum(content: String) {
 
         for (i, char) in middle.chars().into_iter().enumerate() {
             if char == '*' {
-                let top_num = valid_number(top.clone(), i, line_length);
-                let line_num = valid_number(middle.clone(), i, line_length);
-                let bottom_num = valid_number(bottom.clone(), i, line_length);
-
+                let top_num = valid_number(&top, i, line_length);
+                let line_num = valid_number(&middle, i, line_length);
+                let bottom_num = valid_number(&bottom, i, line_length);
+                
                 if (top_num * bottom_num) > 0 {
                     total += top_num * bottom_num
                 } else if (top_num*line_num) > 0{
@@ -224,7 +224,7 @@ fn all_valid_gear_ratio_sum(content: String) {
 
 }
 
-fn valid_number(line: String, gear: usize, length: usize) -> i32{
+fn valid_number(line: &String, gear: usize, length: usize) -> i32{
     // Keep count with a string for simplicity
     let mut number = String::new();
 
@@ -247,6 +247,6 @@ fn valid_number(line: String, gear: usize, length: usize) -> i32{
     if number.is_empty() {
         number.push('0');
     }
-
+    println!("valid number: {}", number);
     number.parse::<i32>().unwrap()
 }
